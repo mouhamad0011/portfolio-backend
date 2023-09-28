@@ -1,0 +1,24 @@
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const connection = require('./config/connection');
+const EducationRoutes = require('./routes/educationRoute');
+const ExperienceRoutes = require('./routes/experienceRoute');
+const AboutRoutes = require('./routes/aboutRoute');
+const SkillRoutes= require('./routes/skillRoute');
+const ProjectRoutes= require('./routes/projectRoute');
+const AdminRoutes= require('./routes/adminRoute');
+const app = express();
+const port = 5000;
+app.use(cors());
+app.use(express.json());
+app.use('/education', EducationRoutes);
+app.use('/experience', ExperienceRoutes);
+app.use('/about',AboutRoutes);
+app.use('/skills',SkillRoutes);
+app.use('/projects',ProjectRoutes);
+app.use('/admin',AdminRoutes);
+app.listen(port, () => {
+    connection.checkConnec();
+    console.log('success');
+});

@@ -1,57 +1,70 @@
+const bcrypt = require('bcryptjs');
 const Admin = require('../models/Admin');
 
-const addAdmin= async (req,res)=>{
+const addAdmin = async (req, res) => {
   try {
-    const schema=new Admin({
-      username:req.body.username,
-      email:req.body.email,
-      phone:req.body.phone,
-      password:req.body.password
+    const { username, email, phone, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const schema = new Admin({
+      username,
+      email,
+      phone,
+      password: hashedPassword,
     });
+
     const newAdmin = await schema.save();
     res.status(200).json({
       success: true,
-      message: 'admin added successfully',
+      message: 'Admin added successfully',
       data: newAdmin,
     });
   } catch (error) {
-    res.status(404).json({
+    res.status(500).json({
       success: false,
-      message: 'unable to add data',
-      error: error
+      message: 'Unable to add admin',
+      error: error.message,
     });
   }
-}
-const getAdmin = async (req, res) => {
-    try {
-      const username = req.body.username;
-      const password = req.body.password;
-      const admin = await Admin.findOne({
-        $or: [{ username: username }, { email: username }, { phone: username }],
-        password: password 
-      });
-  
-      if (!admin) {
-        res.status(404).json({
-          success: false,
-          message: 'Admin not found'
-        });
-        return;
-      }
-  
-      res.status(200).json({
-        success: true,
-        message: 'Admin retrieved successfully',
-        data: admin
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: 'Unable to get admin data',
-        error: error.message
-      });
-    }
-  };
-  
+};
 
-module.exports = {getAdmin,addAdmin};
+const getAdmin = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    const admin = await Admin.findOne({
+      $or: [{ username }, { email: username }, { phone: username }],
+    });
+
+    if (!admin) {
+      res.status(404).json({
+        success: false,
+        message: 'Admin not found',
+      });
+      return;
+    }
+    const passwordMatch = await bcrypt.compare(password, admin.password);
+
+    if (!passwordMatch) {
+      res.status(401).json({
+        success: false,
+        message: 'Incorrect password',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Admin retrieved successfully',
+      data: admin,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Unable to get admin data',
+      error: error.message,
+    });
+  }
+};
+
+module.exports = { getAdmin, addAdmin };

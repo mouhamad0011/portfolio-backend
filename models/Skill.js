@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
 const skillSchema = new Schema({
-  image:{type: String, required:true},
-  name:{type: String, required:true}
+  name:{type: String, required:true},
+  image:{type: String}
 });
 const Skill = model('Skills',skillSchema);
 module.exports = Skill;

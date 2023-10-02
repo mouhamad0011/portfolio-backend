@@ -30,7 +30,8 @@ const addAdmin = async (req, res) => {
 
 const getAdmin = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password } = req.query; 
+
 
     const admin = await Admin.findOne({
       $or: [{ username }, { email: username }, { phone: username }],
@@ -66,5 +67,6 @@ const getAdmin = async (req, res) => {
     });
   }
 };
+
 
 module.exports = { getAdmin, addAdmin };

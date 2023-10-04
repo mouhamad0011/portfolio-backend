@@ -30,7 +30,7 @@ const addAdmin = async (req, res) => {
 
 const getAdmin = async (req, res) => {
   try {
-    const { username, password } = req.query; 
+    const { username, password } = req.params; 
 
 
     const admin = await Admin.findOne({

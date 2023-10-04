@@ -42,7 +42,7 @@ const updateAboutByID = async (req, res) => {
     const about = await About.findByIdAndUpdate(req.params.ID, req.body);
     res.status(200).json({
       success: true,
-      message: 'education updated successfully.',
+      message: 'updated successfully.',
       data: about,
     });
   } catch (error) {

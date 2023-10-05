@@ -38,6 +38,9 @@ const addEducations = async (req, res) => {
   }
 };
 
+
+
+
 const deleteEducation = async (req, res) => {
   try {
     const education = await Education.deleteOne({ _id: req.params.ID });

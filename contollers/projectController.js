@@ -55,5 +55,20 @@ const deleteProject = async (req, res) => {
       });
     }
   };
-
-module.exports = {getProjects,deleteProject, addProject};
+  const updateProjectByID = async (req, res) => {
+    try {
+      const project = await Project.findByIdAndUpdate(req.params.ID, req.body);
+      res.status(200).json({
+        success: true,
+        message: 'project updated successfully.',
+        data: project,
+      });
+    } catch (error) {
+      res.status(400).json({
+        success: false,
+        message: 'Unable to update project',
+        error: error,
+      });
+    }
+  };
+module.exports = {getProjects,deleteProject, addProject,updateProjectByID};
